@@ -1,0 +1,101 @@
+﻿@using System
+@using RecipeReviews.Controllers
+
+@model IndexViewModel
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+    <div class="row single-row bg-light">
+        @{
+            if (ViewData["WelcomeMsg"] != null)
+            {
+                <h5 class="m-4">@ViewData["WelcomeMsg"]</h5>
+            }
+        }
+        <hr />
+        <div class="col-md-9 mih-100">
+            <div id="recipes-container" class="list-container">
+                <h3 class="pb-2">New Recipes</h3>
+                <hr />
+                @foreach (var item in Model.Recipes)
+                {
+                    <div class="row p-3 mb-1 recipe-item list-item grey-border">
+                        <div class="col-4">
+                            <img src=@item.ImageSrc class="recipe-list-img" alt="No Image" />
+                        </div>
+                        <div class="col-8">
+                            <div class="row mb-1">
+                                <h5>
+                                    @Html.ActionLink(
+                                        item.Recipe.Title,
+                                        "Details",
+                                        "Recipes",
+                                        new { id = item.Recipe.RecipeId },
+                                        new { style = "text-decoration:none;color:black;" })
+                                </h5>
+                            </div>
+                            <div class="row mb-1">
+                                @{
+                                    for (int i = 1; i <= Program.MaxRecipeRating; i++)
+                                    {
+                                        string s = $"{i}stars";
+                                        if (i <= item.Recipe.Rating)
+                                        {
+                                            <span class="fa fa-star checked"></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="fa fa-star"></span>
+                                        }
+                                    }
+                                }
+                                <span class="d-inline-block pl-2">@Math.Round(item.Recipe.Rating, 1)</span>
+                            </div>
+                            <div class="row mb-3">
+                                @Html.ActionLink(
+                                    $" {item.Recipe.Account.Username}",
+                                    "Profile",
+                                    "Account",
+                                    new { id = item.Recipe.Account.AccountId },
+                                    new { style = "text-decoration:none;font-style: italic;" })
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div id="membersColumn" class="col-md-3 mih-100">
+            <div class="list-container">
+                <div class="members-container">
+                    <h4 class="pb-2">Top Contributors</h4>
+                    <hr />
+
+                    @foreach (var item in Model.MembersWithRecipeCount)
+                    {
+                        <div class="row p-2 list-item">
+                            <div class="col mb-1">
+                                <img src=@item.Key.GetImageRequestPath() class="profile-pic-small" alt="No Image" />
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <h5>
+                                        @Html.ActionLink(
+                                            item.Key.Username,
+                                            "Profile",
+                                            "Account",
+                                            new { id = item.Key.AccountId },
+                                            new { style = "text-decoration:none;color:black;" })
+                                    </h5>
+                                </div>
+                                <div class="row mb-2">
+                                    @item.Value recipes
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>

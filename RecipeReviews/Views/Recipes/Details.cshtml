@@ -1,0 +1,147 @@
+﻿@using System
+@using RecipeReviews.Controllers
+@model RecipeReviews.Models.RecipeViewModel
+
+@{
+    ViewData["Title"] = @Model.Recipe.Title;
+    Layout = null;
+    var keywords = "food";
+    if (Model.TagNames.Any())
+    {
+        keywords += $",{string.Join(",", Model.TagNames)}";
+    }
+}
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
+<head>
+    <meta property="og:title" content="recipe" />
+    <meta name="keywords" content=@keywords />
+    @{ await Html.RenderPartialAsync("_DefaultHeadHtml"); }
+</head>
+<body>
+    <header>
+        @{
+            await Html.RenderPartialAsync("_NavBar");
+            await Html.RenderPartialAsync("_SearchBar");
+        }
+    </header>
+    <div class="container h-100 bg-white">
+        <partial name="_CookieConsentPartial" />
+        <main role="main" class="pb-3 h-100">
+            <h3>@Model.Recipe.Title</h3>
+            <p class="font-weight-bold arial mb-3">@Model.Recipe.Account.Username</p>
+            <img id="imageElement" src=@Model.ImageSrc alt="Recipe Image" height="150" width="150" />
+            @{
+                if (Model.ViewerIsRecipeOwner)
+                {
+                    <form id="editImage" asp-action="EditImage" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <input id="Image" name="Image" type="file" accept="image/png, image/jpeg, image/jpg" /><br />
+                            <span id="imageError" class="text-danger"></span>
+                        </div>
+                        <input id="recipeId" name="recipeId" class="d-none" type="text" value=@Model.Recipe.RecipeId />
+                        <div class="form-group">
+                            <input type="submit" value="Upload" class="btn btn-primary" /><br />
+                            <span id="submitImageError" class="text-danger"></span>
+                        </div>
+                    </form>
+                }
+            }
+            <hr />
+            <fieldset>
+                <label class="control-label">Rating: </label>
+                @{
+                    for (int i = 1; i <= Program.MaxRecipeRating; i++)
+                    {
+                        string s = $"{i}stars";
+                        if (i <= Model.Recipe.Rating)
+                        {
+                            <span id=@s class="fa fa-star rating-star checked"></span>
+                        }
+                        else
+                        {
+                            <span id=@s class="fa fa-star rating-star"></span>
+                        }
+                    }
+                    <span id="rating" class="d-inline-block pl-2">@Math.Round(Model.Recipe.Rating, 1)</span>
+                }
+            </fieldset>
+
+            <div id="tagsContainer" class="mt-2 mb-3">
+                @foreach (var item in Model.TagNames)
+                {
+                    <div class="tag-container">
+                        <span class="tag">
+                            @item
+                        </span>
+                    </div>
+                }
+            </div>
+            <hr />
+            <div id="recipeText">
+                @{
+                    if (Model.ViewerIsRecipeOwner)
+                    {
+                        <div class="form-group text-styling-bar">
+                            <button id='B' class="s-larger-font" title="Bold Highlighted Text">
+                                <b>B</b>
+                            </button>
+                            <button id='I' class="s-larger-font " title="Italicize Highlighted Text">
+                                <i>I</i>
+                            </button>
+                            <button id="U" class="s-larger-font" title="Underline Highlighted Text">
+                                <u>U</u>
+                            </button>
+                        </div>
+                        <div id="textInput" class="stylable-input" contenteditable="true">
+                            @Html.Raw(Model.Recipe.Text)
+                        </div>
+
+                        @using (Html.BeginForm("EditRecipeText", "Recipes", FormMethod.Post, new { id = "editTextForm" }))
+                        {
+                            Html.AntiForgeryToken();
+
+                            <div class="form-group">
+                                @Html.TextArea("Text", new { id = "textToPost", @class = "d-none" })
+                            </div>
+                            <input id="recipeId" name="recipeId" class="d-none" type="text" value=@Model.Recipe.RecipeId />
+                            <div class="form-group">
+                                <input id="editDescription" type="submit" value="Edit" class="btn btn-primary" />
+                                <span id=@RecipesController.SubmitTextErrorId class="text-danger"></span>
+                                <span id=@RecipesController.SubmitTextSuccessId class="text-success"></span>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <input id="recipeId" class="d-none" type="text" value=@Model.Recipe.RecipeId />
+                        @Html.Raw(Model.Recipe.Text)
+                    }
+                }
+            </div>
+
+            @{
+                if (Context.User.Identity.IsAuthenticated)
+                {
+                    @Html.ActionLink("", "ChangeRating", "Recipes", null, new { id = "ratingAction", @class = "d-none" });
+                    if (Model.ViewerIsRecipeOwner)
+                    {
+                        <div>
+                            <a asp-action="Delete" asp-route-id="@Model.Recipe.RecipeId">Delete</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <script src="~/js/rating.js"></script>
+                    }
+                }
+            }
+            <script src="~/js/recipe.js"></script>
+        </main>
+    </div>
+    @{ await Html.RenderPartialAsync("_Footer"); }
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/styling.js" asp-append-version="true"></script>
+</body>
+</html>

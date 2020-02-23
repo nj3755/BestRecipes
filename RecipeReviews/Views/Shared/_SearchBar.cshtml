@@ -1,0 +1,16 @@
+﻿<div class="w-100">
+    <div class="search-container">
+        @using (Html.BeginForm("Search", "Home"))
+        {
+            <div class="input-group">
+                <input name="Search" type="search"
+                        placeholder="Search for recipes"
+                        class="search-input form-control bg-white"
+                        required />
+                <div class="input-group-append search-btn">
+                    <button id="btnSearch" type="submit" class="btn btn-link text-warning"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

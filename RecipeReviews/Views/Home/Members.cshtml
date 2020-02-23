@@ -1,0 +1,39 @@
+﻿@model IEnumerable<RecipeReviews.Models.Account>
+
+@{
+    ViewData["Title"] = "Members";
+}
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Created)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <h5>
+                    @Html.ActionLink(
+                        item.Username,
+                        "Profile",
+                        "Account",
+                        new { id = item.AccountId },
+                        new { style = "text-decoration:none;color:black;" })
+                </h5>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

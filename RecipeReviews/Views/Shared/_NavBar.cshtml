@@ -1,0 +1,59 @@
+﻿@using RecipeReviews.Controllers
+
+<nav class="navbar navbar-expand-md navbar-dark bg-light">
+    <div class="container">
+        <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="navbar-brand text-dark" asp-area="" asp-controller="Home" asp-action="Index">RecipeReviews</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Recipes" asp-action="Index">Recipes</a>
+                </li>
+                <li class="nav-item mr-5">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Members">Members</a>
+                </li>
+                @{
+                    if (Context.User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item ml-3">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Recipes" asp-action="Create">Write a new recipe</a>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+        <div class="mx-auto order-0">
+            <a class="navbar-brand mx-auto" href="#"></a>
+        </div>
+        <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+            <ul class="navbar-nav ml-auto">
+                @{
+                    if (Context.User.Identity.IsAuthenticated)
+                    {
+                        var idData = new Dictionary<string, string>() { {"id", Context.GetAccountId() } };
+
+                        <li class="nav-item mr-2">
+                            <a class="nav-link disabled font-italic text-dark">@Context.User.Identity.Name</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Profile" asp-all-route-data=@idData>
+                                Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Details">Edit Account</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="SignOut">Sign Out</a>
+                        </li>
+                    }
+                    else
+                    {
+                        await Html.RenderPartialAsync("_LoginItem");
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</nav>

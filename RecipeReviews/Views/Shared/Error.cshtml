@@ -1,0 +1,32 @@
+﻿@model ErrorViewModel
+@{
+    var errorTitle = "Error";
+    var errorMsg = "An error occurred while processing your request.";
+    if (ViewBag.Code != null)
+    {
+        errorTitle = $"Error ({ViewBag.Code})";
+        switch (ViewBag.Code)
+        {
+            case 401:
+                errorMsg = "You're not authorized to view this page.";
+                break;
+            case 500:
+                errorMsg = "Something went wrong on our side. Sorry, please try again later!";
+                break;
+            default:
+                break;
+        }
+
+    }
+    ViewData["Title"] = errorTitle + " | RecipeReviews";
+}
+
+<h1 class="text-danger mb-3">@errorTitle</h1>
+<h3>@errorMsg</h3>
+
+@if (Model.ShowRequestId)
+{
+    <p>
+        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+    </p>
+}

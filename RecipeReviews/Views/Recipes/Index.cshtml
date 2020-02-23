@@ -1,0 +1,30 @@
+﻿@model IEnumerable<RecipeReviews.Models.RecipeViewModel>
+
+@{
+    string header;
+
+    if (ViewData["Username"] != null)
+    {
+        header = $"{ViewData["Username"]}'s Recipes";
+        ViewData["Title"] = header;
+        
+    }
+    else if (ViewData["Query"] != null)
+    {
+        var q = $"\"{ViewData["Query"]}\"";
+        ViewData["Title"] = q;
+        header = $"Results for {q}";
+    }
+    else
+    {
+        header = "Recipes";
+        ViewData["Title"] = header;
+    }
+}
+
+<div class="row single-row bg-light">
+    <div class="w-100 mih-100">
+        <h4 class="pb-2 pl-3">@header</h4>
+        @{ await Html.RenderPartialAsync("_RecipesList"); }
+    </div>
+</div>

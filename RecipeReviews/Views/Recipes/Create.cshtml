@@ -1,0 +1,56 @@
+﻿@using RecipeReviews.Controllers;
+@model RecipeReviews.Models.RecipeCreationViewModel
+
+@{
+    ViewData["Title"] = "New Recipe";
+}
+<h3>New Recipe</h3>
+<hr />
+<div class="row">
+    <form id="recipeForm" class="w-75 pl-3" asp-action="Create" enctype="multipart/form-data" onsubmit="return recipeCreationPost(event);">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Title" class="control-label"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Image" class="control-label w-100"></label>
+            <input asp-for="Image" class="" type="file" accept="image/png, image/jpeg, image/jpg" />
+            <br />
+            <span id=@RecipesController.ImageErrorId asp-validation-for="Image" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <select id="tagsRequestInput" class="invisible"></select>
+            <div id="tagsContainer" class="mb-3"></div>
+            @Html.DropDownList(
+                "tagList",
+                new SelectList(Model.TagNames),
+                "Select a tag",
+                new { @class = "p-1", id = "tagList" })
+        </div>
+        <div class="form-group">
+            <label asp-for="Text" class="control-label" title="The text of the recipe. You will be able to format it later after clicking create">
+                Content
+            </label>
+            @Html.TextAreaFor(m => m.Text, new { id="Text", @class = "form-control h-auto w-100", rows = 20 })
+            <span asp-validation-for="Text" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+            <span id=@RecipesController.CreationSubmitErrorId class="text-danger"></span>
+        </div>
+    </form>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script src="~/js/recipe.js" asp-append-version="true"></script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

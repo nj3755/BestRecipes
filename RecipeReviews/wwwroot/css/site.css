@@ -1,0 +1,246 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  font-size: 14px;
+}
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+h1, h2 {
+    margin-top: 10px;
+}
+h3 {
+    padding-top: 5px;
+}
+
+option {
+    padding: 0 2px 0 2px;
+}
+
+input[type=image] {
+    padding-top: 2px;
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    background-color: rgb(33,52,64);
+    margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px; /* Vertically center the text there */
+}
+
+.text-styling-bar {
+    width: 100%;
+    border-bottom: 1px medium black;
+    border-top: 1px medium black;
+}
+.stylable-input {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid grey;
+}
+
+.single-row {
+    padding-top: 6rem !important;
+    height: 100%;
+    min-height: 800px;
+}
+@media (max-width: 768px) {
+    single-row {
+        min-height: 400px;
+    }
+}
+
+.item-list {
+    max-height: 1200px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.mih-100 {
+    min-height: 100%;
+}
+
+.s-shadow {
+    box-shadow: -2px 3px 4px 1px rgba(0,0,0,0.42);
+}
+
+.s-larger-font {
+    font-size: 1.05em;
+}
+
+.bg-black {
+    background-color: black;
+}
+.bg-whitesmoke {
+    background-color: whitesmoke;
+}
+.bg-darkslategrey {
+    background-color: darkslategray;
+}
+
+.d-none {
+    display: none;
+}
+
+.search-container {
+    width: 70%;
+    padding: 1px 0 3px 38%;
+    border-radius: 3px;
+    margin-top: 5px;
+    height: 55px;
+}
+.search-input {
+    margin-top: 5px;
+    padding-left: 8px;
+    border: 1px solid black;
+    display: inline-block;
+}
+.search-btn {
+    margin-top: 2px;
+    display: inline-block;
+    color: wheat;
+}
+.search-btn:hover {
+    background-color: lightgreen;
+}
+
+.list-container {
+    padding: 3px;
+    margin: 2px;
+}
+.list-item {
+    padding: 3px;
+}
+
+.grey-border {
+    border: 2px solid #F0F0F0;
+    border-radius: 3px;
+}
+
+/* Recipes */
+#recipes-container {
+    width: 95%;
+}
+.recipe-item {
+    width: 95%;
+    margin-left: 3px;
+    background-color: white;
+}
+.recipe-list-img {
+    width: 100%;
+    min-height: 40px;
+    min-width: 40px;
+    max-height: 200px;
+    max-width: 200px;
+}
+
+/* Account */
+.members-container {
+    min-height: 30%;
+    border: 4px solid #F0F0F0;
+    border-radius: 3px;
+    background-color: whitesmoke;
+    margin-top: 20%;
+    padding: 9px;
+}
+.profile-pic-small {
+    height: 100%;
+    width: 100%;
+    min-height: 20px;
+    min-width: 20px;
+    max-height: 100px;
+    max-width: 100px;
+}
+.profile-pic-medium {
+    width: 100%;
+    min-height: 160px;
+    min-width: 160px;
+    max-height: 200px;
+    max-width: 200px;
+}
+.profile-row {
+    padding-left: 5%;
+    margin-top: 2%;
+}
+
+/* Tag */
+.tag-container {
+    display: inline-block;
+    margin: 1px 3px 3px;
+}
+.tag {
+    padding: 1px 3px 1px 4px;
+    background-color: darkseagreen;
+    display: inline-block;
+    color: white;
+}
+.tag:hover {
+    background-color: green;
+}
+.delete-tag {
+    padding: 1px 3px 1px 4px;
+    display: inline-block;
+}
+.delete-tag:hover {
+    background-color: red;
+}
+
+/* Login */
+#loginDropdown {
+    box-shadow: -2px 7px 8px 1px rgba(0,0,0,0.42);
+}
+#formLogin {
+    padding: 30px;
+    min-width: 300px;
+}
+
+/* Rating */
+.checked {
+    color: orange;
+}
+
+.rating-star:hover {
+    color: orange;
+}

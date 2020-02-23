@@ -1,0 +1,61 @@
+﻿@using System
+@model IEnumerable<RecipeReviews.Models.RecipeViewModel>
+
+<div id="recipes-container" class="list-container item-list">
+
+    <div class="row p-3 mb-1 ml-1 w-100">
+        @using (Html.BeginForm("Sort", "Recipes", new { q = @ViewData["Query"] }, FormMethod.Post, false, new { name = "sortingForm" }))
+        {
+            @Html.DropDownList(
+                "recipeSortingOptions",
+                new SelectList(Sorting.RecipeOptions.Keys),
+                Sorting.OptionLabel)
+        }
+    </div>
+
+    @foreach (var item in Model)
+    {
+        <div class="row p-3 mb-1 recipe-item list-item grey-border">
+            <div class="col">
+                <img src=@item.ImageSrc class="recipe-list-img" alt="No Image" height="150" width="150" />
+            </div>
+            <div class="col">
+                <div class="row mb-1">
+                    <h5>
+                        @Html.ActionLink(
+                            item.Recipe.Title,
+                            "Details",
+                            "Recipes",
+                            new { id = item.Recipe.RecipeId },
+                            new { style = "text-decoration:none;color:black;" })
+                    </h5>
+                </div>
+                <div class="row mb-1">
+                    @{
+                        for (int i = 1; i <= Program.MaxRecipeRating; i++)
+                        {
+                            string s = $"{i}stars";
+                            if (i <= item.Recipe.Rating)
+                            {
+                                <span class="fa fa-star checked"></span>
+                            }
+                            else
+                            {
+                                <span class="fa fa-star"></span>
+                            }
+                        }
+                    }
+                    <span id="rating" class="d-inline-block pl-2">@Math.Round(item.Recipe.Rating, 1)</span>
+                </div>
+                <div class="row mb-3">
+                    @Html.ActionLink(
+                        $" {item.Recipe.Account.Username}",
+                        "Profile",
+                        "Account",
+                        new { id = item.Recipe.Account.AccountId },
+                        new { style = "text-decoration:none;font-style: italic;" })
+                </div>
+            </div>
+        </div>
+    }
+</div>

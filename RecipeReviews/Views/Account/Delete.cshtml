@@ -1,0 +1,15 @@
+﻿@model RecipeReviews.Models.Account
+
+@{
+    ViewData["Title"] = "Delete Account";
+}
+
+<h3>Delete</h3>
+
+<h4>@Model.Username, are you sure you want to delete your account?</h4>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="AccountId" />
+    <input type="submit" value="Delete" class="btn btn-danger" />
+</form>
+
