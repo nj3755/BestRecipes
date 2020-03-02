@@ -35,7 +35,7 @@ namespace RecipeReviews
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddSingleton(new FileUploadService("\\.(png|jpg|jpeg)", 6, invalidSize: 5242880));     // invalidSize: > 5 MB
-            services.AddTransient<BrAuthenticationService>();
+            services.AddTransient<UserAuthenticationService>();
             services.AddScoped<AccountService>();
             services.AddScoped<RecipeService>();
 

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace RecipeReviews.Services
 {
-    public class BrAuthenticationService
+    public class UserAuthenticationService
     {
         public bool Authenticate(Account account, string password, out AuthenticationError error)
         {
@@ -46,23 +46,23 @@ namespace RecipeReviews.Services
         /// Signs the user in.
         /// </summary>
         /// <param name="account">The account</param>
-        /// <returns>True if the sign-in was successful</returns>
-        public async Task<bool> SignIn(HttpContext context, Account account)
+        public async Task SignIn(HttpContext context, Account account)
         {
-            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
+            var identity = new ClaimsIdentity(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                ClaimTypes.Name,
+                ClaimTypes.Role);
             identity.AddClaim(new Claim(ClaimTypes.Role, "User"));
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, account.AccountId));
             identity.AddClaim(new Claim(ClaimTypes.Name, account.Username));
             var principal = new ClaimsPrincipal(identity);
             await context.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
-                principal,
-                new AuthenticationProperties { IsPersistent = false });
-            return context.User.Identity.IsAuthenticated;
+                principal);
         }
 
         /// <summary>
-        /// Signs the user in.
+        /// Signs the user out.
         /// </summary>
         /// <param name="account">The account</param>
         /// <returns>True if the sign-out was successful</returns>

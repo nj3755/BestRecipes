@@ -15,13 +15,13 @@ namespace RecipeReviews.Controllers
     {
         private readonly AccountService _accountService;
         private readonly IHostingEnvironment _hostingEnv;
-        private readonly BrAuthenticationService _authService;
+        private readonly UserAuthenticationService _authService;
         private readonly FileUploadService _fileUploadService;
 
         public AccountController(
             RecipeReviewsContext context,
             IHostingEnvironment hostingEnv,
-            BrAuthenticationService authService,
+            UserAuthenticationService authService,
             FileUploadService uploadService)
         {
 
@@ -53,19 +53,17 @@ namespace RecipeReviews.Controllers
         {
             var account = await _accountService.Find(GenerateAccountId(username));
 
-            if (_authService.Authenticate(account, password, out BrAuthenticationService.AuthenticationError error))
+            if (_authService.Authenticate(account, password, out UserAuthenticationService.AuthenticationError error))
             {
-                if (await _authService.SignIn(HttpContext, account))
-                {
-                    return Json(new { success = true, message = "" });
-                }
+                await _authService.SignIn(HttpContext, account);
+                return Json(new { success = true, message = "" });
             }
 
             switch (error)
             {
-                case BrAuthenticationService.AuthenticationError.InvalidUsername:
+                case UserAuthenticationService.AuthenticationError.InvalidUsername:
                     return Json(new { success = false, message = "Invalid username.", elementId = UsernameErrorId });
-                case BrAuthenticationService.AuthenticationError.InvalidPassword:
+                case UserAuthenticationService.AuthenticationError.InvalidPassword:
                     return Json(new { success = false, message = "Incorrect password.", elementId = PasswordErrorId });
                 default:
                     return Json(new { success = false, message = "Error while signing in, please try again later.", elementId = LoginErrorId });
@@ -238,13 +236,13 @@ namespace RecipeReviews.Controllers
                     return Json(new { success = false, message = "The passwords do not match.", elementId = "confirmPasswordError" });
                 }
 
-                var authenticated = _authService.Authenticate(account, oldPassword, out BrAuthenticationService.AuthenticationError error);
+                var authenticated = _authService.Authenticate(account, oldPassword, out UserAuthenticationService.AuthenticationError error);
 
                 if (!authenticated)
                 {
                     switch (error)
                     {
-                        case BrAuthenticationService.AuthenticationError.InvalidPassword:
+                        case UserAuthenticationService.AuthenticationError.InvalidPassword:
                             return Json(new { success = false, message = "Incorrect password.", elementId = "oldPasswordError" });
                         default:
                             return Json(new { success = false,
@@ -277,15 +275,13 @@ namespace RecipeReviews.Controllers
             var accountId = HttpContext.GetAccountId();
             var findAccount = _accountService.Find(accountId);
 
-            if (file != null && FileIsInvalid(file, out JsonResult jsonResult))
+            if (FileIsInvalid(file, out JsonResult jsonResult))
             {
                 return jsonResult;
             }
-            var message = "";
 
             var account = await findAccount;
             string fileName = GenerateImageFilename(account, file.FileName);
-
             _fileUploadService.DeleteIfNotNull(account.PictureFilename, _hostingEnv);
 
             if (await _fileUploadService.TryUpload(file, fileName, _hostingEnv))
@@ -297,7 +293,7 @@ namespace RecipeReviews.Controllers
                     return Json(new
                     {
                         success = true,
-                        message,
+                        message = "",
                         elementId = ProfilePictureId,
                         imageSrc = Program.GetRequestPath(account.PictureFilename),
                         errorElementIds = new string[] { ProfilePictureErrorId }
@@ -308,8 +304,12 @@ namespace RecipeReviews.Controllers
                     account.PictureFilename = null;
                 }
             }
-            message = "The picture could not be saved due to an error. Please try again later.";
-            return Json(new { success = false, message, elementId = SubmitPicErrorId });
+            return Json(new
+            {
+                success = false,
+                message = "The picture could not be saved due to an error. Please try again later.",
+                elementId = SubmitPicErrorId
+            });
         }
 
         // GET: Users/Delete/5
@@ -332,6 +332,7 @@ namespace RecipeReviews.Controllers
 
             return View(account);
         }
+
         // POST: Account/Delete/id
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -356,6 +357,11 @@ namespace RecipeReviews.Controllers
 
         private bool FileIsInvalid(IFormFile file, out JsonResult errorJson)
         {
+            if (file == null)
+            {
+                errorJson = Json(new { success = false, message = "", elementId = ProfilePictureErrorId });
+                return true;
+            }
             if (_fileUploadService.InvalidExtension(file))
             {
                 errorJson = Json(new { success = false, message = "Only JPG and PNG images are allowed.", elementId = ProfilePictureErrorId });

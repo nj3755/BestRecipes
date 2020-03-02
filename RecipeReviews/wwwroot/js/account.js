@@ -80,6 +80,7 @@ function editImagePost() {
             if (data.success) {
                 $("#" + data.elementId).attr("src", data.imageSrc);
                 clearErrorElements(data.errorElementIds);
+                location.reload();
             } else {
                 $("#" + data.elementId).text(data.message);
             }
